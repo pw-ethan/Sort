@@ -240,7 +240,7 @@ void mergePass(vector<int> &nums)
 }
 
 
-// --—°‘Ò≈≈–Ú------------------------------------------------
+// --—°‘Ò≈≈–Ú-------------------------------------------
 void selectionSort(vector<int> &nums)
 {
 	int top = nums.size() - 1;
@@ -288,8 +288,87 @@ void heapSort(vector<int> &nums)
 	}
 }
 
+// --≤Â»Î≈≈–Ú------------------------------------------- 
+void insertSort(vector<int> &nums)
+{
+	int len = nums.size();
+	for(int i = 1; i < len; i++){
+		int tmp = nums[i];
+		int j = i - 1;
+		while(j >= 0 && nums[j] > tmp){
+			nums[j + 1] = nums[j];
+			j--;	
+		}
+		nums[j + 1] = tmp;
+	} 
+}
+void binaryInsertSort(vector<int> &nums)
+{
+	int len = nums.size();
+	for(int i = 1; i < len; i++){
+		if(nums[i] < nums[i - 1]){
+			int low = 0;
+			int high = i - 1;
+			int tmp = nums[i];
+			while(low <= high){
+				int mid = (low + high) / 2;
+				if(tmp < nums[mid]){
+					high = mid - 1;
+				}
+				else{
+					low = mid + 1;
+				}
+			}
+			for(int j = i; j > high + 1; j--){
+				nums[j] = nums[j - 1];
+			}
+			nums[high + 1] = tmp;
+		}	
+	}
+}
+
+void gapInsertSort(vector<int> &nums, int gap)
+{
+	int len = nums.size();
+	for(int i = gap; i < len; i += gap){
+		int tmp = nums[i];
+		int j = i - gap;
+		while(j >= 0 && nums[j] > tmp){
+			nums[j + gap] = nums[j];
+			j -= gap;
+		}
+		nums[j + gap] = tmp;
+	}
+}
+void shellSort(vector<int> &nums)
+{
+	int len = nums.size();
+	for(int i = len / 2; i > 2; i /= 2){
+		gapInsertSort(nums, i); 
+	}
+	gapInsertSort(nums, 1);
+}
+
+
+// --∑÷≤º≈≈–Ú-------------------------------------------
+void pigeonholeSort(vector<int> &nums)
+{
+	vector<int> tmp(100);
+	int len = nums.size();
+	for(int i = 0; i < len; i++){
+		tmp[nums[i]]++;
+	}
+	int k = 0;
+	for(int i = 0; i < 100; i++){
+		for(int j = 0; j < tmp[i]; j++){
+			nums[k++] = i;
+		}
+	}
+} 
+
 int main()
 {
+	//10 13 14 23 25 25 27 33 35 39 45 54 58 59 65 73 82 90 94 94
 	int arr[] = {13,14,94,33,82,25,59,94,65,23,45,27,73,25,39,10,35,54,90,58};//{5, 4, 1, 3, 5};//{5, 4, 3, 2, 1,};//{1, 2, 3, 4, 5};
 	vector<int> nums;
 	for(int i = 0; i < sizeof(arr)/sizeof(int); ++i){
@@ -302,9 +381,13 @@ int main()
 	//quickSort(nums, 0, nums.size() - 1);
 	//combSort(nums);
 	//mergeSort(nums, 0, nums.size() - 1);
-	mergePass(nums);
+	//mergePass(nums);
 	//selectionSort(nums);
 	//heapSort(nums);
+	//insertSort(nums);
+	//binaryInsertSort(nums);
+	//shellSort(nums);
+	pigeonholeSort(nums); 
 	printVector(nums);
 	return 0;
 }
