@@ -1,22 +1,24 @@
+#include "Sort.h"
 #include <iostream>
-#include <vector>
+#include <ctime>
+#include <cstdlib>
 
 using namespace std;
 
 #define min(x, y) (x > y ? y : x)
 
 
-void printVector(vector<int> &v)
+void PrintVector(const vector<int> &vec)
 {
 	cout << "[ ";
-	for(vector<int>::iterator it = v.begin(); it != v.end(); ++it){
-		cout << *it << " ";
+	for(auto item : vec){
+		cout << item << " ";
 	}
 	cout << "]" << endl;
 }
 
 
-// --½»»»ÅÅĞò------------------------------------------- 
+// --½»»»ÅÅĞò-------------------------------------------
 void bubbleSort(vector<int> &nums) // ĞèÒª°Ñ²ÎÊıÉùÃ÷ÎªÒıÓÃ£¬·ñÔòÖ»ÊÇ¶ÔĞÎ²Î½øĞĞÅÅĞò
 {
     if(nums.empty()){
@@ -43,7 +45,7 @@ void bubbleSort(vector<int> &nums) // ĞèÒª°Ñ²ÎÊıÉùÃ÷ÎªÒıÓÃ£¬·ñÔòÖ»ÊÇ¶ÔĞÎ²Î½øĞĞÅÅ
     }
 }
 
-void bubbleSort1(vector<int> &nums) // ĞèÒª°Ñ²ÎÊıÉùÃ÷ÎªÒıÓÃ£¬·ñÔòÖ»ÊÇ¶ÔĞÎ²Î½øĞĞÅÅĞò 
+void bubbleSort1(vector<int> &nums) // ĞèÒª°Ñ²ÎÊıÉùÃ÷ÎªÒıÓÃ£¬·ñÔòÖ»ÊÇ¶ÔĞÎ²Î½øĞĞÅÅĞò
 {
 	if(nums.empty()){
 		return;
@@ -63,7 +65,7 @@ void bubbleSort1(vector<int> &nums) // ĞèÒª°Ñ²ÎÊıÉùÃ÷ÎªÒıÓÃ£¬·ñÔòÖ»ÊÇ¶ÔĞÎ²Î½øĞĞÅ
 	}
 }
 
-void bubbleSort2(vector<int> &nums) // ĞèÒª°Ñ²ÎÊıÉùÃ÷ÎªÒıÓÃ£¬·ñÔòÖ»ÊÇ¶ÔĞÎ²Î½øĞĞÅÅĞò 
+void bubbleSort2(vector<int> &nums) // ĞèÒª°Ñ²ÎÊıÉùÃ÷ÎªÒıÓÃ£¬·ñÔòÖ»ÊÇ¶ÔĞÎ²Î½øĞĞÅÅĞò
 {
 	if(nums.empty()){
 		return;
@@ -80,13 +82,6 @@ void bubbleSort2(vector<int> &nums) // ĞèÒª°Ñ²ÎÊıÉùÃ÷ÎªÒıÓÃ£¬·ñÔòÖ»ÊÇ¶ÔĞÎ²Î½øĞĞÅ
 		}
 		--top;
 	}
-}
-
-void swap(int &a, int &b)
-{
-	a = a ^ b;
-	b = a ^ b;
-	a = a ^ b;
 }
 
 void cocktailSort(vector<int> &nums)
@@ -145,15 +140,40 @@ void oddEvenSort(vector<int> &nums)
 	}
 }
 
-void quickSort(vector<int> &nums, int left, int right)
+// Ñ¡¹Ì¶¨Öµ»ù×¼
+int SelectPivot(vector<int> &nums, int left, int right) {
+    return nums[left];
+}
+// Ëæ»úÑ¡»ù×¼
+int SelectPivotRandom(vector<int> &nums, int left, int right) {
+    srand(unsigned(time(nullptr)));
+    int index = rand() % (right - left) + left;
+    swap(nums[left], nums[index]);
+    return nums[left];
+}
+// ÈıÊıÈ¡ÖĞÑ¡»ù×¼
+int SelectPivotMiddleOfThree(vector<int> &nums, int left, int right) {
+    int mid = (left + right) >> 1;
+    if (nums[mid] > nums[right]) {
+        swap(nums[mid], nums[right]);
+    }
+    if (nums[left] > nums[right]) {
+        swap(nums[left], nums[right]);
+    }
+    if (nums[mid] > nums[left]) {
+        swap(nums[mid], nums[left]);
+    }
+    return nums[left];
+}
+// ¿ìËÙÅÅĞò
+void QuickSort(vector<int> &nums, int left, int right)
 {
-	if(nums.empty()){
-		return;
-	}
+	if (nums.empty()) return;
+
 	if(left < right){
 		int low = left;
 		int high = right;
-		int key = nums[left];
+		int key = SelectPivotMiddleOfThree(nums, left, right);
 		while(low < high)
 		{
 			while(low < high && nums[high] > key){
@@ -170,8 +190,8 @@ void quickSort(vector<int> &nums, int left, int right)
 			}
 		}
 		nums[low] = key;
-		quickSort(nums, left, low - 1);
-		quickSort(nums, low + 1, right);
+		QuickSort(nums, left, low - 1);
+		QuickSort(nums, low + 1, right);
 	}
 }
 
@@ -182,7 +202,7 @@ void combSort(vector<int> &nums)
 	bool flag = true;
 	while(gap > 1 || flag){
 		if(gap > 1){
-			gap /= shrink_factor; 
+			gap /= shrink_factor;
 		}
 		flag = false;
 		for(int i = 0; i + gap < nums.size(); i++){
@@ -191,11 +211,11 @@ void combSort(vector<int> &nums)
 				flag = true;
 			}
 		}
-	}	
+	}
 }
 // --½»»»ÅÅĞò-------------------------------------------
 
-// --¹é²¢ÅÅĞò------------------------------------------- 
+// --¹é²¢ÅÅĞò-------------------------------------------
 void merge(vector<int> &nums, int start, int middle, int end)
 {
 	vector<int> tmp(end - start + 1);
@@ -255,7 +275,7 @@ void selectionSort(vector<int> &nums)
 			swap(nums[min], nums[i]);
 		}
 	}
-} 
+}
 
 void max_heapify(vector<int> &nums, int index, int size)
 {
@@ -288,8 +308,8 @@ void heapSort(vector<int> &nums)
 	}
 }
 
-// --²åÈëÅÅĞò------------------------------------------- 
-void insertSort(vector<int> &nums)
+// ²åÈëÅÅĞò
+void InsertSort(vector<int> &nums)
 {
 	int len = nums.size();
 	for(int i = 1; i < len; i++){
@@ -297,12 +317,13 @@ void insertSort(vector<int> &nums)
 		int j = i - 1;
 		while(j >= 0 && nums[j] > tmp){
 			nums[j + 1] = nums[j];
-			j--;	
+			j--;
 		}
 		nums[j + 1] = tmp;
-	} 
+	}
 }
-void binaryInsertSort(vector<int> &nums)
+// ÕÛ°ë²åÈëÅÅĞò
+void BinaryInsertSort(vector<int> &nums)
 {
 	int len = nums.size();
 	for(int i = 1; i < len; i++){
@@ -311,7 +332,7 @@ void binaryInsertSort(vector<int> &nums)
 			int high = i - 1;
 			int tmp = nums[i];
 			while(low <= high){
-				int mid = (low + high) / 2;
+				int mid = (low + high) >> 1;
 				if(tmp < nums[mid]){
 					high = mid - 1;
 				}
@@ -323,11 +344,11 @@ void binaryInsertSort(vector<int> &nums)
 				nums[j] = nums[j - 1];
 			}
 			nums[high + 1] = tmp;
-		}	
+		}
 	}
 }
 
-void gapInsertSort(vector<int> &nums, int gap)
+void GapInsertSort(vector<int> &nums, int gap)
 {
 	int len = nums.size();
 	for(int i = gap; i < len; i += gap){
@@ -340,13 +361,13 @@ void gapInsertSort(vector<int> &nums, int gap)
 		nums[j + gap] = tmp;
 	}
 }
-void shellSort(vector<int> &nums)
+void ShellSort(vector<int> &nums)
 {
 	int len = nums.size();
 	for(int i = len / 2; i > 2; i /= 2){
-		gapInsertSort(nums, i); 
+		GapInsertSort(nums, i);
 	}
-	gapInsertSort(nums, 1);
+	GapInsertSort(nums, 1);
 }
 
 
@@ -364,30 +385,4 @@ void pigeonholeSort(vector<int> &nums)
 			nums[k++] = i;
 		}
 	}
-} 
-
-int main()
-{
-	//10 13 14 23 25 25 27 33 35 39 45 54 58 59 65 73 82 90 94 94
-	int arr[] = {13,14,94,33,82,25,59,94,65,23,45,27,73,25,39,10,35,54,90,58};//{5, 4, 1, 3, 5};//{5, 4, 3, 2, 1,};//{1, 2, 3, 4, 5};
-	vector<int> nums;
-	for(int i = 0; i < sizeof(arr)/sizeof(int); ++i){
-		nums.push_back(arr[i]);
-	}
-	printVector(nums);
-	//bubbleSort(nums);
-	//cocktailSort(nums);
-	//oddEvenSort(nums);
-	//quickSort(nums, 0, nums.size() - 1);
-	//combSort(nums);
-	//mergeSort(nums, 0, nums.size() - 1);
-	//mergePass(nums);
-	//selectionSort(nums);
-	//heapSort(nums);
-	//insertSort(nums);
-	//binaryInsertSort(nums);
-	//shellSort(nums);
-	pigeonholeSort(nums); 
-	printVector(nums);
-	return 0;
 }

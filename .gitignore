@@ -27,3 +27,8 @@
 *.exe
 *.out
 *.app
+
+# codeblocks
+Sort.*
+!*.cpp
+!*.h
